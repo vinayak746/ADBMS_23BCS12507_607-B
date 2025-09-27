@@ -1,0 +1,56 @@
+DROP TABLE IF EXISTS FeePayments;
+
+CREATE TABLE FeePayments (
+    payment_id INT PRIMARY KEY,
+    student_name VARCHAR(100) NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,
+    CONSTRAINT chk_amount CHECK (amount > 0),
+    payment_date DATE
+);
+
+-- This transaction was already successful.
+START TRANSACTION;
+INSERT INTO FeePayments (payment_id, student_name, amount, payment_date) VALUES
+(1, 'Ashish', 5000.00, '2025-09-27'),
+(2, 'Smaran', 4500.00, '2025-09-27'),
+(3, 'Vaibhav', 5500.00, '2025-09-26');
+COMMIT;
+
+-- Verifying the first successful transaction.
+SELECT * FROM FeePayments;
+
+-- This transaction is now fixed with a positive amount and changed to COMMIT.
+START TRANSACTION;
+INSERT INTO FeePayments (payment_id, student_name, amount, payment_date) VALUES
+(4, 'Kiran', 6000.00, '2025-09-28');
+INSERT INTO FeePayments (payment_id, student_name, amount, payment_date) VALUES
+(5, 'Fixed Payment 1', 200.00, '2025-09-28');
+COMMIT;
+
+-- Verifying the second successful transaction.
+SELECT * FROM FeePayments;
+
+-- This transaction is now fixed with a valid student name and changed to COMMIT.
+START TRANSACTION;
+INSERT INTO FeePayments (payment_id, student_name, amount, payment_date) VALUES
+(6, 'Priya', 7500.00, '2025-09-28');
+INSERT INTO FeePayments (payment_id, student_name, amount, payment_date) VALUES
+(7, 'Fixed Payment 2', 4000.00, '2025-09-28');
+COMMIT;
+
+-- Verifying the third successful transaction.
+SELECT * FROM FeePayments;
+
+-- This transaction is also fixed and changed to COMMIT.
+START TRANSACTION;
+INSERT INTO FeePayments (payment_id, student_name, amount, payment_date) VALUES (8, 'Rohan', 8000.00, '2025-09-29');
+INSERT INTO FeePayments (payment_id, student_name, amount, payment_date) VALUES (9, 'Meera', 8200.00, '2025-09-29');
+COMMIT;
+
+-- The isolation demo was already a successful transaction.
+START TRANSACTION;
+INSERT INTO FeePayments (payment_id, student_name, amount, payment_date) VALUES (10, 'Sneha', 9000.00, '2025-09-30');
+COMMIT;
+
+-- Final verification of all successful transactions.
+SELECT * FROM FeePayments;
